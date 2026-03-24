@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+/*style using claude*/
+    *, *::before, *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    :root {
+        --bg:     #0b0e14;
+        --panel:  #111520;
+        --border: #1e2a3a;
+        --accent: #00e5ff;
+        --orange: #ff6b35;
+        --text:   #cdd6f4;
+        --muted:  #4a5568;
+        --glow:   0 0 18px rgba(0, 229, 255, 0.35);
+    }
+
+    body {
+        min-height: 100vh;
+        background: var(--bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Rajdhani', sans-serif;
+        color: var(--text);
+    }
+
+    body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background-image:
+            linear-gradient(rgba(0,229,255,.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0,229,255,.04) 1px, transparent 1px);
+        background-size: 40px 40px;
+        pointer-events: none;
+    }
+
+    div {
+        position: relative;
+        width: 420px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        padding: 36px;
+        clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%);
+        animation: fadeUp .6s ease both;
+    }
+
+    div::before {
+        content: '';
+        position: absolute;
+        top: -1px; left: 0;
+        width: 60%; height: 2px;
+        background: linear-gradient(90deg, var(--accent), transparent);
+        box-shadow: var(--glow);
+    }
+
+    div::after {
+        content: '';
+        position: absolute;
+        top: 0; right: 0;
+        width: 34px; height: 34px;
+        border-left: 2px solid var(--accent);
+        border-bottom: 2px solid var(--accent);
+        clip-path: polygon(100% 0, 0 100%, 100% 100%);
+    }
+
+    h1.topic {
+        font-size: 1.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        color: #fff;
+        margin-bottom: 28px;
+    }
+
+    input[type="number"] {
+        display: block;
+        width: 100%;
+        margin-bottom: 14px;
+        background: rgba(0,229,255,.04);
+        border: 1px solid var(--border);
+        border-left: 2px solid var(--accent);
+        color: var(--text);
+        font-family: 'Share Tech Mono', monospace;
+        font-size: 1rem;
+        padding: 11px 14px;
+        outline: none;
+        transition: border-color .2s, box-shadow .2s;
+        -moz-appearance: textfield;
+    }
+
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+    }
+
+    input[type="number"]::placeholder {
+        color: var(--muted);
+        font-size: .85rem;
+    }
+
+    input[type="number"]:focus {
+        border-color: var(--accent);
+        background: rgba(0,229,255,.07);
+        box-shadow: var(--glow);
+    }
+
+    button.but {
+        width: 100%;
+        padding: 13px;
+        margin-top: 4px;
+        background: transparent;
+        border: 1px solid var(--accent);
+        color: var(--accent);
+        font-family: 'Rajdhani', sans-serif;
+        font-weight: 700;
+        font-size: 1rem;
+        letter-spacing: .2em;
+        text-transform: uppercase;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+        transition: color .25s, box-shadow .25s;
+    }
+
+    button.but::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--accent);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform .3s ease;
+        z-index: 0;
+    }
+
+    button.but:hover::before { transform: scaleX(1); }
+    button.but:hover {
+        color: var(--bg);
+        box-shadow: var(--glow);
+    }
+
+    button.but:active { transform: scale(.98); }
+
+    h1.ans {
+        font-family: 'Share Tech Mono', monospace;
+        font-size: .95rem;
+        font-weight: 400;
+        color: #fff;
+        margin-top: 22px;
+        padding: 16px 18px;
+        border: 1px solid var(--border);
+        border-left: 2px solid var(--orange);
+        background: rgba(255,107,53,.05);
+        line-height: 1.5;
+        min-height: 54px;
+    }
+
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(22px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+</style>
+<body>
+<H1 class="topic">Find Triangle area</H1>
+<div>
+    <input type="number" id="A" placeholder="point A :cm">
+    <input type="number" id="B" placeholder="point B :cm">
+    <input type="number" id="C" placeholder="point C :cm">
+    <button class="but" id="button">GET</button>
+    <h1 class="ans" id="answer">
+the answer
+    </h1>
+</div>
+</body>
+<script>
+
+    var button =document.getElementById("button")
+    var answer =document.getElementById("answer")
+
+
+    button.addEventListener("click",function () {
+
+    var point_a =Number(document.getElementById("A").value);
+    var point_b =Number(document.getElementById("B").value);
+    var point_c =Number(document.getElementById("C").value);
+
+        var parameter =((point_a+point_b+point_c)/2);
+
+
+        var area = Math.sqrt(parameter*((parameter-point_a)*(parameter-point_b)*(parameter-point_c)));
+        answer.textContent="The triangle area is :"+area
+    });
+
+    
+
+
+</script>
+</html>
